@@ -1,6 +1,19 @@
 #include <iostream>
 #include <cmath>
 #include <limits>
+#include <tuple>
+
+struct getFirstAndLast {
+    std::string First;
+    std::string Last;
+};
+
+getFirstAndLast firstAndLastName(std::string fullName) {
+    getFirstAndLast result;
+    result.First = fullName.substr(0,fullName.find(' ', 0) - 1);
+    result.Last = fullName.substr(fullName.find(' ', 0),fullName.length());
+    return result;
+}
 
 std::string getFullName() 
 {
@@ -32,26 +45,30 @@ std::string getFullName()
         }
         else
         {
-            first = fullName.substr(0,fullName.find(' ', 0)) - 1);
-            last = fullName.substr(fullName.find(' ', 0)),fullName.length());
-            std::cout << "Your first name is " << first << std::endl;
-            std::cout << "Your last name is " << last << std::endl;
             // Everything is fine, continue
             inputOk = true;   
         }
     }
 
-    return first, last;
+    return fullName;
 }
+
 
 std::string convertFullName(std::string first, std::string last) 
 {
-    std::string pigLatinFirst, pigLatinLast;
+    std::string pigLatinFirst, pigLatinLast, fullPigLatinName;
+    //Converting input to lower case
+    first[0] = tolower(first[0]);
+    last[0] = tolower(last[0]);
 
     pigLatinFirst = first.substr(1, first.find(" ")) + first.substr(0,1) + "ay";
     pigLatinLast = last.substr(1, last.find(" ")) + last.substr(0,1) + "ay";
 
-    return pigLatinFirst, pigLatinLast;
+    pigLatinFirst[0] = toupper(pigLatinFirst[0]);
+    pigLatinLast[0] = toupper(pigLatinLast[0]);
+
+    fullPigLatinName = pigLatinFirst + " " + pigLatinLast;
+    return fullPigLatinName;
 }
 
 int main()
@@ -59,12 +76,19 @@ int main()
     char ContinueAnswer;
     do
     {
-        std::string first, last = getFullName();
-        std::string pigLatinFirst, pigLatinLast = convertFullName(first, last);
+        
+        std::string fullName = getFullName();
+        //first = fullName.substr(0,fullName.find(' ', 0) - 1);
+        //last = fullName.substr(fullName.find(' ', 0),fullName.length());
+        getFirstAndLast firstAndLast = firstAndLastName(fullName);
+        std::cout << "Your first name is " << firstAndLast.First << std::endl;
+        std::cout << "Your last name is " << firstAndLast.Last << std::endl;
 
-        std::cout << "\tHello ," << first << " " << last << ",";
-        std::cout << "\n\tYour Pig Latin name is: " << pigLatinFirst << " " << pigLatinLast << "." << std::endl;
-        std::cout << "\nDo you want to convert another name? (Y/N)";
+        std::string pigLatinFirstAndPigLatinLast = convertFullName(firstAndLast.First, firstAndLast.Last);
+
+        std::cout << "\tHello " << firstAndLast.First << " " << firstAndLast.Last << ",";
+        std::cout << "\n\tYour Pig Latin name is: " << pigLatinFirstAndPigLatinLast << "." << std::endl;
+        std::cout << "\nDo you want to translate another name? (Y/N)";
         std::cin >> ContinueAnswer;
         if (!(ContinueAnswer == 'Y' || ContinueAnswer == 'y'))
         {
